@@ -8,6 +8,7 @@
 #include <ostream>
 #include <string>
 #include <iostream>
+#include <stack>
 using namespace std;
 class MyGraph {
 public:

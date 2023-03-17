@@ -53,6 +53,7 @@ int main()
             cout << resarray[i].first[j] << "  ";
         cout << "  capacity : " << resarray[i].second << endl;
     }
+    g.output(cout);
 
 
     return(0);
