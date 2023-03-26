@@ -164,13 +164,15 @@ while (!stackVector.empty()) {
     }
 
 
-    // reverse the stack vector
-    reverse(stackVector.begin(), stackVector.end());
-    res.first = stackVector;
 
+    res.first = stackVector;
+    float max = -FLT_MAX;
     for (int i = 0; i < weightVector.size(); i++) {
-        res.second -= weightVector[i];
+        if (weightVector[i] > max) {
+            max = weightVector[i];
+        }
     }
+    res.second = -max;
     return res;
 }
 
