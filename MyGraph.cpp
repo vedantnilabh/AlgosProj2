@@ -46,18 +46,11 @@ void MyGraph::output(ostream &os) {
 
 }
 pair<vector<int>, float> MyGraph::HW2Prog(int s, int t, bool printMST) {
-/*    if(s > t) {
-        int temp = s;
-        s = t;
-        t = temp;
-    }*/
     pair<vector<int>, vector<float>> MST;
     vector<int> nearest;
     vector<float> distance;
     vector<bool> InY;
 
-    // create pair of vectors
-    // first vector is the path
     // initialize nearest, distance, and InY
     nearest.push_back(0);
     distance.push_back(0);
@@ -77,20 +70,21 @@ pair<vector<int>, float> MyGraph::HW2Prog(int s, int t, bool printMST) {
         int min = INT_MAX;
         int minIndex = -1;
         for (int i = 1; i < adjList.size(); i++) {
+            // find the vertex i that is not in Y and has the smallest distance[i]
             if (InY[i] == false && distance[i] < min) {
                 min = distance[i];
                 minIndex = i;
             }
         }
-        // add nearest[minIndex] and minIndex to the path
+        // add nearest[minIndex] and minIndex to MST
         MST.first.push_back(nearest[minIndex]);
         MST.first.push_back(minIndex);
-        //res.first.push_back(nearest[minIndex]);
         MST.second.push_back(min);
         InY[minIndex] = true;
         for (int i = 1; i < adjList.size(); i++) {
             auto it = find(adjList[minIndex].begin(), adjList[minIndex].end(), i);
             if (it != adjList[minIndex].end()) {
+                // if there is an edge from minIndex to i, update distance[i] if necessary
                 int index = it - adjList[minIndex].begin(); {
                     if (weightList[minIndex][index] < distance[i]) {
                         distance[i] = weightList[minIndex][index];
@@ -108,6 +102,7 @@ pair<vector<int>, float> MyGraph::HW2Prog(int s, int t, bool printMST) {
             cout << MST.first[i * 2] << " " << MST.first[i * 2 + 1] << " " << -MST.second[i] << endl;
         }
     }
+    // using DFS to find the path from s to t on the MST
     pair<vector<int>, float> res;
     vector<vector<int>> edges;
     vector<vector<float>> weights;
@@ -132,10 +127,8 @@ pair<vector<int>, float> MyGraph::HW2Prog(int s, int t, bool printMST) {
     for (int i = 0; i < adjList.size(); i++) {
         visited.push_back(false);
     }
-    //stack<int> path;
     vector<int> stackVector;
     vector<float> weightVector;
-    //path.push(s);
     stackVector.push_back(s);
     visited[s] = true;
 while (!stackVector.empty()) {
@@ -146,7 +139,7 @@ while (!stackVector.empty()) {
         bool found = false;
         for (int i = 0; i < edges[top].size(); i++) {
             if (!visited[edges[top][i]]) {
-                //path.push(edges[top][i]);
+                // if the vertex is not visited, push it to the stack
                 stackVector.push_back(edges[top][i]);
                 weightVector.push_back(weights[top][i]);
                 visited[edges[top][i]] = true;
@@ -155,7 +148,7 @@ while (!stackVector.empty()) {
             }
         }
         if (!found) {
-            //path.pop();
+            // if there is no unvisited vertex adjacent to the top vertex, pop the top vertex
 
             stackVector.pop_back();
             weightVector.pop_back();
@@ -167,6 +160,7 @@ while (!stackVector.empty()) {
 
     res.first = stackVector;
     float max = -FLT_MAX;
+    // finding the minimum weight (max because we are using -G) of the edges on the path
     for (int i = 0; i < weightVector.size(); i++) {
         if (weightVector[i] > max) {
             max = weightVector[i];
